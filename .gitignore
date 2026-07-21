@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local environments and editors
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Credentials
+.env
+.env.*
+!.env.example
+
+# Downloaded market data and generated research artifacts
+data/*
+!data/README.md
+!data/event_exclusions.csv
+outputs/*
+!outputs/README.md
+*.joblib
+*.log
+
+# Temporary document/render files
+tmp/
+docx_render_check*/
+outputs/docx_qa_*/
+
+# OS files
+.DS_Store
+Thumbs.db
