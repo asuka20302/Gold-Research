@@ -151,7 +151,7 @@ def main() -> None:
                 "training_uses_dates_after_test": bool(
                     training_frame.index.max() > held_out_frame.index.max()
                 ),
-                "model_file": str(model_path.resolve()),
+                "model_file": model_path.relative_to(PROJECT).as_posix(),
                 **{column: metrics[column] for column in AMOUNT_COLUMNS},
             }
         )

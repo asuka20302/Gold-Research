@@ -96,16 +96,20 @@ under [`reports/`](reports/).
 | `compare_loss_functions.py` | Squared, Huber and absolute-loss comparison |
 | `compare_weighted_ensemble.py` | Validation-selected model weighting |
 | `huber_10fold_blocked_cv.py` | Requested 9-of-10 blocked Huber diagnostic |
+| `huber_rolling_19block_cv.py` | Fair 19-block, fixed-window leakage-free Huber validation |
 | `huber_loss_coefficient_report.py` | Analytic-gradient Huber loss minimization |
 | `gold_PnL_ledger.py` | Standalone position and P&L ledger |
+| `tools/export_public_reports.py` | Copy selected outputs with portable repository-relative paths |
 
 ## Validation warning
 
-The 9-of-10 blocked Huber experiment is a coefficient-stability diagnostic.
+The 9-of-10 blocked Huber experiment is retained as a coefficient-stability diagnostic.
 For folds 1–9, training includes observations later than the held-out block, so
-it is **not** a leakage-free trading backtest. The next production research step
-is expanding-window walk-forward validation, where every prediction is trained
-only on earlier dates.
+it is **not** a leakage-free trading backtest. The maintained fair validation
+uses 19 equal chronological blocks: each of ten
+Huber models trains on the immediately preceding nine blocks and tests the next
+block. Every model receives 1,287 training rows and 143 test rows, with no later
+dates in training.
 
 ## Tests
 
@@ -115,7 +119,8 @@ pytest
 
 GitHub Actions runs the same tests on every push and pull request. Tests cover
 target timing, interaction/regime construction, feature hierarchy, and the
-analytic Huber gradient used by the numerical optimizer.
+analytic Huber gradient used by the numerical optimizer, plus the equal-size
+past-only construction of the 19-block rolling validation.
 
 ## QMT integration
 
@@ -132,4 +137,10 @@ The Chinese manual can be regenerated with:
 
 ```powershell
 python tools/build_pipeline_manual_cn.py
+```
+
+Refresh the compact GitHub reports after rerunning experiments with:
+
+```powershell
+python tools/export_public_reports.py
 ```

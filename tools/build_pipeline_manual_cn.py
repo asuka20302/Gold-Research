@@ -729,6 +729,7 @@ def build_document():
             ("加权平均", "compare_weighted_ensemble.py；outputs/weighted_ensemble_h1/"),
             ("金额误差报告", "build_growth_amount_report.py；outputs/growth_amount_report_h1/"),
             ("十分组 Huber", "huber_10fold_blocked_cv.py；outputs/huber_10fold_blocked/"),
+            ("十九分组滚动 Huber", "huber_rolling_19block_cv.py；outputs/huber_rolling_19block/"),
             ("Huber 损失最小化", "huber_loss_coefficient_report.py；outputs/huber_loss_minimization/"),
             ("自动化测试", "tests/；.github/workflows/tests.yml"),
             ("QMT 可选集成", "qmt/"),
@@ -747,7 +748,7 @@ def build_document():
             ("docs/", "当前项目笔记与中文完整流程文档"),
             ("qmt/", "可选 QMT 信号导出和策略模板，与研究主流程隔离"),
             ("reports/", "供代码审查的小型最终结果表，不包含完整市场数据"),
-            ("tests/", "目标时间、五模型范围、交互项、状态标签和 Huber 解析梯度测试"),
+            ("tests/", "目标时间、五模型范围、交互项、状态标签、Huber 梯度和十九分组公平性测试"),
             ("data/、outputs/", "本地下载和生成目录；默认不提交 Git"),
         ],
         [2400, 6960],
@@ -756,7 +757,7 @@ def build_document():
         "删除已合并进文档的一次性更新脚本和临时渲染目录。",
         "使用 .gitignore 排除虚拟环境、密钥、下载数据、完整输出、模型文件和缓存。",
         "提供 .env.example、requirements.txt、README 和目录说明以便复现。",
-        "新增 6 个 pytest 测试；本地测试全部通过。",
+        "新增 8 个 pytest 测试；本地测试全部通过。",
         "新增 GitHub Actions，在每次 push 和 pull request 时自动运行测试。",
     ]:
         add_bullet(doc, text)
@@ -768,9 +769,43 @@ def build_document():
         color=RED,
     )
 
-    add_heading(doc, "24. 当前结论", 1)
-    add_para(doc, "项目已经完成从数据获取到金额误差账本的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权以及十分组 Huber 旋转验证均已有可复现实现。")
-    add_para(doc, "当前最有潜力的金额预测模型是 PCA11 绝对误差回归，但整体仍属于研究原型。主要未解决问题是对大幅黄金波动的系统性低估，以及缺少真正未参与模型开发的未来测试样本。", bold=True, color=INK)
+    add_heading(doc, "24. 十九分组固定窗口 Huber 验证（当前公平方案）", 1)
+    add_para(doc, "为消除扩展窗口中训练样本数量不同带来的公平性问题，2,728 条可用观测被处理为 19 个完全相等的连续区块。每块 143 条，最早 11 条余数不进入该公平性诊断。模型 1 使用区块 1—9 训练、区块 10 测试；之后窗口每次向前移动一块，直到模型 10 使用区块 10—18 训练、区块 19 测试。")
+    add_table(
+        doc,
+        ["设计或结果", "数值"],
+        [
+            ("模型数量", "10"),
+            ("每个模型训练区块", "9"),
+            ("每个模型训练观测", "1,287"),
+            ("每个模型测试观测", "143"),
+            ("合并严格样本外预测", "1,430"),
+            ("增长 MAE", "0.639 个百分点"),
+            ("增长 RMSE", "0.908 个百分点"),
+            ("波动幅度 MAE", "0.517 个百分点"),
+            ("价格变化 MAE", "3.531 元/克"),
+        ],
+        [3600, 5760],
+    )
+    for text in [
+        "所有训练日期严格早于对应测试日期。",
+        "每个训练目标在测试块首个信号日之前或当日已经可观察。",
+        "十个模型固定使用相同 14 个特征、epsilon=1.1 和 alpha=0.001。",
+        "测试窗口增长 MAE 范围为 0.428—0.817 个百分点。",
+        "国际金价日收益、动量与波动率交互、溢价变化及通胀预期系数符号最稳定。",
+    ]:
+        add_bullet(doc, text)
+    add_callout(
+        doc,
+        "与旧十分组结果的区别",
+        "旧十分组方法的前九折会使用测试日期之后的数据，只适合相关性和系数稳定性诊断。十九分组固定窗口结果没有这种未来数据泄漏，且每个模型训练量相同，因此应作为当前主要验证结果。两个实验的测试日期和样本量不同，误差不能被解释为完全同口径的模型优劣。",
+        fill="FFF7E6",
+        color=GOLD,
+    )
+
+    add_heading(doc, "25. 当前结论", 1)
+    add_para(doc, "项目已经完成从数据获取到金额误差账本的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权、十分组诊断以及十九分组固定滚动验证均已有可复现实现。")
+    add_para(doc, "当前公平验证中的 Huber 增长 MAE 为 0.639 个百分点，但模型仍系统性低估较大波动，最近测试窗口的价格变化 MAE 明显较高。下一步应使用这些严格样本外预测确定交易阈值、持仓规模和交易成本后的 P&L，而不是继续引用存在未来信息的十分组误差。", bold=True, color=INK)
 
     # Keep table rows together where feasible and add document metadata.
     doc.core_properties.title = "黄金量化预测项目完整流程"

@@ -1,0 +1,45 @@
+{
+  "procedure": "fixed-size leakage-free 19-block rolling validation",
+  "models_trained": 10,
+  "chronological_blocks": 19,
+  "training_blocks_per_model": 9,
+  "block_rows": 143,
+  "training_rows_per_model": 1287,
+  "test_rows_per_model": 143,
+  "available_rows": 2728,
+  "used_rows": 2717,
+  "excluded_oldest_remainder_rows": 11,
+  "out_of_sample_prediction_rows": 1430,
+  "features": [
+    "return_1d",
+    "momentum_5d",
+    "momentum_20d",
+    "ma_gap_20d",
+    "xauusd_return_1d",
+    "xauusd_momentum_5d",
+    "usdcnh_return_1d",
+    "breakeven_inflation_10y",
+    "oil_momentum_5d",
+    "shanghai_gold_premium",
+    "premium_change_5d",
+    "shfe_gold_settle_return_1d",
+    "momentum_5d_x_volatility_20d",
+    "volatility_20d"
+  ],
+  "model_parameters": {
+    "alpha": 0.001,
+    "epsilon": 1.1,
+    "fit_intercept": true,
+    "max_iter": 5000,
+    "tol": 1e-05,
+    "warm_start": false
+  },
+  "preprocessing": [
+    "median imputer",
+    "standard scaler"
+  ],
+  "hyperparameters_fixed_across_models": true,
+  "future_data_used_for_training": false,
+  "event_exclusions_applied": true,
+  "interpretation": "Each model uses exactly nine immediately preceding equal-sized blocks and predicts the next block. Results are comparable across windows and contain no later-date training observations."
+}

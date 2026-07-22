@@ -1730,16 +1730,12 @@ def main() -> None:
     selections["daily_data_trading_eligible"] = True
     selections["event_exclusions_applied"] = not exclusion_report.empty
     selections["event_excluded_rows"] = excluded_rows.index.nunique()
-    selections["event_exclusion_file"] = str(
-        args.event_exclusion_file.resolve()
-    )
+    selections["event_exclusion_file"] = args.event_exclusion_file.as_posix()
     metrics["signal_timing"] = "previous_close"
     metrics["daily_data_trading_eligible"] = True
     metrics["event_exclusions_applied"] = not exclusion_report.empty
     metrics["event_excluded_rows"] = excluded_rows.index.nunique()
-    metrics["event_exclusion_file"] = str(
-        args.event_exclusion_file.resolve()
-    )
+    metrics["event_exclusion_file"] = args.event_exclusion_file.as_posix()
     selections["active_feature_count"] = len(selected_features)
     selections["active_features"] = ",".join(selected_features)
     selections["feature_selection_alpha"] = args.feature_selection_alpha
