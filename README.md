@@ -97,6 +97,7 @@ under [`reports/`](reports/).
 | `compare_weighted_ensemble.py` | Validation-selected model weighting |
 | `huber_10fold_blocked_cv.py` | Requested 9-of-10 blocked Huber diagnostic |
 | `huber_rolling_19block_cv.py` | Fair 19-block, fixed-window leakage-free Huber validation |
+| `locked_block19_ensemble.py` | Five-model development and frozen-weight comparison on common Block 19 |
 | `huber_loss_coefficient_report.py` | Analytic-gradient Huber loss minimization |
 | `gold_PnL_ledger.py` | Standalone position and P&L ledger |
 | `tools/export_public_reports.py` | Copy selected outputs with portable repository-relative paths |
@@ -106,10 +107,17 @@ under [`reports/`](reports/).
 The 9-of-10 blocked Huber experiment is retained as a coefficient-stability diagnostic.
 For folds 1–9, training includes observations later than the held-out block, so
 it is **not** a leakage-free trading backtest. The maintained fair validation
-uses 19 equal chronological blocks: each of ten
+uses 19 equal chronological blocks: each of the ten
 Huber models trains on the immediately preceding nine blocks and tests the next
 block. Every model receives 1,287 training rows and 143 test rows, with no later
 dates in training.
+
+For a common final comparison, `locked_block19_ensemble.py` uses Blocks 1–18
+for rolling development predictions and voting weights, fits all five final
+models on Blocks 10–18, and evaluates them on the same Block 19 observations.
+Block 19 is computationally excluded from fitting and weighting. Because its
+Huber outcomes were inspected in an earlier experiment, it is described as a
+locked common holdout rather than a historically pristine test set.
 
 ## Tests
 

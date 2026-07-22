@@ -17,6 +17,9 @@ models.
 - `huber_rolling_19block_fold_metrics.csv`: equal-window period results.
 - `huber_rolling_19block_coefficient_stability.csv`: coefficient sign and dispersion report.
 - `huber_rolling_19block_metadata.json`: exact 19-block construction and safeguards.
+- `locked_block19_metrics.csv`: common Block 19 amount errors for all five models and the ensemble.
+- `locked_block19_weights.csv`: voting weights learned exclusively from Blocks 1–18.
+- `locked_block19_metadata.json`: holdout-isolation rules and final selection record.
 
 The all-data coefficient fit is for parameter estimation, not out-of-sample
 performance. The blocked ten-fold results are diagnostic rather than a

@@ -49,6 +49,12 @@ CSV_REPORTS = {
     / "rolling_coefficient_stability.csv": (
         "huber_rolling_19block_coefficient_stability.csv"
     ),
+    OUTPUTS / "locked_block19_ensemble" / "locked_block19_metrics.csv": (
+        "locked_block19_metrics.csv"
+    ),
+    OUTPUTS / "locked_block19_ensemble" / "frozen_voting_weights.csv": (
+        "locked_block19_weights.csv"
+    ),
 }
 
 JSON_REPORTS = {
@@ -58,6 +64,9 @@ JSON_REPORTS = {
     OUTPUTS / "huber_rolling_19block" / "rolling_metadata.json": (
         "huber_rolling_19block_metadata.json"
     ),
+    OUTPUTS / "locked_block19_ensemble" / "locked_block19_metadata.json": (
+        "locked_block19_metadata.json"
+    ),
 }
 
 BINARY_REPORTS = {
@@ -66,6 +75,9 @@ BINARY_REPORTS = {
     ),
     OUTPUTS / "huber_rolling_19block" / "rolling_fold_error_comparison.png": (
         "huber_rolling_19block_fold_errors.png"
+    ),
+    OUTPUTS / "locked_block19_ensemble" / "locked_block19_comparison.png": (
+        "locked_block19_comparison.png"
     ),
 }
 

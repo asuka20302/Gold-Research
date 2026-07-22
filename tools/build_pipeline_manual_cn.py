@@ -730,6 +730,7 @@ def build_document():
             ("金额误差报告", "build_growth_amount_report.py；outputs/growth_amount_report_h1/"),
             ("十分组 Huber", "huber_10fold_blocked_cv.py；outputs/huber_10fold_blocked/"),
             ("十九分组滚动 Huber", "huber_rolling_19block_cv.py；outputs/huber_rolling_19block/"),
+            ("锁定第十九块共同测试", "locked_block19_ensemble.py；outputs/locked_block19_ensemble/"),
             ("Huber 损失最小化", "huber_loss_coefficient_report.py；outputs/huber_loss_minimization/"),
             ("自动化测试", "tests/；.github/workflows/tests.yml"),
             ("QMT 可选集成", "qmt/"),
@@ -757,7 +758,7 @@ def build_document():
         "删除已合并进文档的一次性更新脚本和临时渲染目录。",
         "使用 .gitignore 排除虚拟环境、密钥、下载数据、完整输出、模型文件和缓存。",
         "提供 .env.example、requirements.txt、README 和目录说明以便复现。",
-        "新增 8 个 pytest 测试；本地测试全部通过。",
+        "新增 10 个 pytest 测试；本地测试全部通过。",
         "新增 GitHub Actions，在每次 push 和 pull request 时自动运行测试。",
     ]:
         add_bullet(doc, text)
@@ -803,9 +804,33 @@ def build_document():
         color=GOLD,
     )
 
-    add_heading(doc, "25. 当前结论", 1)
-    add_para(doc, "项目已经完成从数据获取到金额误差账本的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权、十分组诊断以及十九分组固定滚动验证均已有可复现实现。")
-    add_para(doc, "当前公平验证中的 Huber 增长 MAE 为 0.639 个百分点，但模型仍系统性低估较大波动，最近测试窗口的价格变化 MAE 明显较高。下一步应使用这些严格样本外预测确定交易阈值、持仓规模和交易成本后的 P&L，而不是继续引用存在未来信息的十分组误差。", bold=True, color=INK)
+    add_heading(doc, "25. 锁定第十九块的五模型共同测试", 1)
+    add_para(doc, "为了让五个模型在完全相同的测试日期上比较，第 19 块被排除在训练和权重计算之外。第 1—18 块用于开发：依次使用前九块训练并预测第 10—18 块，由这些开发期样本外预测计算增长 MAE；最终五个模型统一使用第 10—18 块的 1,287 条观测训练，再共同预测第 19 块的 143 条观测。")
+    add_table(
+        doc,
+        ["候选模型", "第 19 块增长 MAE", "第 19 块价格变化 MAE"],
+        [
+            ("BaggedHuber", "0.797 个百分点", "8.065 元/克"),
+            ("加权平均", "0.816 个百分点", "8.257 元/克"),
+            ("Lasso", "0.823 个百分点", "8.342 元/克"),
+            ("ElasticNet", "0.824 个百分点", "8.345 元/克"),
+            ("Ridge", "0.824 个百分点", "8.345 元/克"),
+            ("OLS", "0.824 个百分点", "8.345 元/克"),
+        ],
+        [3000, 3180, 3180],
+    )
+    add_para(doc, "权重规则为开发期样本外增长 MAE 的归一化倒数。五个开发期 MAE 几乎相同，因此权重都接近 20%。四个普通线性模型的预测也高度相似，导致投票缺少模型多样性；锁定测试中加权平均没有超过 BaggedHuber，所以当前部署候选仍为 BaggedHuber。", bold=True, color=INK)
+    add_callout(
+        doc,
+        "关于“未触碰”的准确表述",
+        "新程序保证第 19 块没有进入训练、滚动开发误差或权重计算。但此前十九分组 Huber 诊断已经显示过该时期的结果，因此不能恢复研究人员层面的完全盲测。当前应称为“从现在起锁定的共同留出集”；真正全新的最终检验需要等待从未查看过的未来数据。",
+        fill="FFF7E6",
+        color=GOLD,
+    )
+
+    add_heading(doc, "26. 当前结论", 1)
+    add_para(doc, "项目已经完成从数据获取到金额误差账本的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权、十九分组固定滚动验证以及锁定共同留出集比较均已有可复现实现。")
+    add_para(doc, "锁定第 19 块的共同测试表明 BaggedHuber 的增长和价格变化 MAE 均优于当前加权平均。当前问题不是简单调整投票权重，而是四个线性模型缺少预测多样性，并且所有模型仍低估部分较大波动。下一步应保留 BaggedHuber 基线，研究真正不同的模型或状态条件，再用全新的未来数据检验。", bold=True, color=INK)
 
     # Keep table rows together where feasible and add document metadata.
     doc.core_properties.title = "黄金量化预测项目完整流程"
