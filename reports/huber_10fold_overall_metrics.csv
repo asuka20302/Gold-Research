@@ -1,0 +1,2 @@
+models_trained,total_oof_rows,growth_mae_pp,growth_rmse_pp,growth_bias_pp,growth_median_ae_pp,growth_p90_ae_pp,growth_magnitude_mae_pp,growth_magnitude_bias_pp,price_change_mae_cny_per_gram,price_change_rmse_cny_per_gram,price_change_bias_cny_per_gram
+10,2728,0.5873884328465956,0.9280546084218564,0.016386944371443,0.4020031826821002,1.2646095609378798,0.4662078927021548,-0.3687871639284297,2.575796572135226,4.509375480641867,0.0921219459849768

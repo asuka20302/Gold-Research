@@ -1,0 +1,48 @@
+{
+  "available_rows": 2728,
+  "excluded_oldest_remainder_rows": 11,
+  "development_blocks": "10-18 rolling OOF predictions",
+  "development_rows": 1287,
+  "development_start": "2020-06-03 00:00:00",
+  "development_end": "2025-10-17 00:00:00",
+  "locked_holdout_block": 19,
+  "holdout_rows": 143,
+  "holdout_start": "2025-10-20 00:00:00",
+  "holdout_end": "2026-06-23 00:00:00",
+  "forecast_model": "BaggedHuber",
+  "forecast_horizon_sessions": 1,
+  "signal_timing": "after signal-date close",
+  "entry_timing": "next-session open",
+  "exit_timing": "same-session close",
+  "position_constraint": "theoretical direct Au99.99 long/flat",
+  "initial_capital_cny": 100000.0,
+  "commission_bps_per_side": 3.0,
+  "slippage_bps_per_side": 2.0,
+  "round_trip_break_even_threshold_pp": 0.10005001900650345,
+  "minimum_development_trades": 50,
+  "selection_objective": "highest development OOF net Sharpe; tie-break total return, max drawdown and lower threshold",
+  "selected_rules": {
+    "best_full": {
+      "name": "Full_t0.100",
+      "threshold_pp": 0.10005,
+      "sizing": "full",
+      "risk_multiplier": null
+    },
+    "best_volatility": {
+      "name": "Vol_t0.000_r0.5",
+      "threshold_pp": 0.0,
+      "sizing": "volatility",
+      "risk_multiplier": 0.5
+    },
+    "primary": {
+      "name": "Vol_t0.000_r0.5",
+      "threshold_pp": 0.0,
+      "sizing": "volatility",
+      "risk_multiplier": 0.5
+    }
+  },
+  "holdout_used_for_rule_selection": false,
+  "holdout_used_for_model_training": false,
+  "historical_exposure_warning": "Block 19 was exposed in earlier model diagnostics. This code locks it computationally but does not restore human-level blindness.",
+  "cost_warning": "Default costs are research assumptions. Replace them with the exact broker, venue and instrument schedule before live use."
+}
