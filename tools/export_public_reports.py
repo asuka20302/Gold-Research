@@ -55,6 +55,15 @@ CSV_REPORTS = {
     OUTPUTS / "locked_block19_ensemble" / "frozen_voting_weights.csv": (
         "locked_block19_weights.csv"
     ),
+    OUTPUTS / "locked_block19_pnl" / "locked_block19_strategy_summary.csv": (
+        "locked_block19_pnl_summary.csv"
+    ),
+    OUTPUTS / "locked_block19_pnl" / "locked_block19_cost_sensitivity.csv": (
+        "locked_block19_cost_sensitivity.csv"
+    ),
+    OUTPUTS / "locked_block19_pnl" / "development_primary_block_stability.csv": (
+        "locked_block19_development_stability.csv"
+    ),
 }
 
 JSON_REPORTS = {
@@ -67,6 +76,9 @@ JSON_REPORTS = {
     OUTPUTS / "locked_block19_ensemble" / "locked_block19_metadata.json": (
         "locked_block19_metadata.json"
     ),
+    OUTPUTS / "locked_block19_pnl" / "selected_trading_rules.json": (
+        "locked_block19_trading_rules.json"
+    ),
 }
 
 BINARY_REPORTS = {
@@ -78,6 +90,9 @@ BINARY_REPORTS = {
     ),
     OUTPUTS / "locked_block19_ensemble" / "locked_block19_comparison.png": (
         "locked_block19_comparison.png"
+    ),
+    OUTPUTS / "locked_block19_pnl" / "locked_block19_equity_comparison.png": (
+        "locked_block19_pnl_equity.png"
     ),
 }
 

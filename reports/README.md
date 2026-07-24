@@ -20,6 +20,10 @@ models.
 - `locked_block19_metrics.csv`: common Block 19 amount errors for all five models and the ensemble.
 - `locked_block19_weights.csv`: voting weights learned exclusively from Blocks 1–18.
 - `locked_block19_metadata.json`: holdout-isolation rules and final selection record.
+- `locked_block19_pnl_summary.csv`: net P&L and risk comparison for the frozen strategy and benchmarks.
+- `locked_block19_cost_sensitivity.csv`: primary-rule results under zero, half, base and double costs.
+- `locked_block19_development_stability.csv`: primary-rule results across development Blocks 10–18.
+- `locked_block19_trading_rules.json`: timing, cost assumptions and development-selected rules.
 
 The all-data coefficient fit is for parameter estimation, not out-of-sample
 performance. The blocked ten-fold results are diagnostic rather than a

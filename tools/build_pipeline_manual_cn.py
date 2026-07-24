@@ -731,6 +731,7 @@ def build_document():
             ("十分组 Huber", "huber_10fold_blocked_cv.py；outputs/huber_10fold_blocked/"),
             ("十九分组滚动 Huber", "huber_rolling_19block_cv.py；outputs/huber_rolling_19block/"),
             ("锁定第十九块共同测试", "locked_block19_ensemble.py；outputs/locked_block19_ensemble/"),
+            ("锁定第十九块 P&L", "locked_block19_pnl.py；outputs/locked_block19_pnl/"),
             ("Huber 损失最小化", "huber_loss_coefficient_report.py；outputs/huber_loss_minimization/"),
             ("自动化测试", "tests/；.github/workflows/tests.yml"),
             ("QMT 可选集成", "qmt/"),
@@ -758,7 +759,7 @@ def build_document():
         "删除已合并进文档的一次性更新脚本和临时渲染目录。",
         "使用 .gitignore 排除虚拟环境、密钥、下载数据、完整输出、模型文件和缓存。",
         "提供 .env.example、requirements.txt、README 和目录说明以便复现。",
-        "新增 10 个 pytest 测试；本地测试全部通过。",
+        "新增 13 个 pytest 测试；本地测试全部通过。",
         "新增 GitHub Actions，在每次 push 和 pull request 时自动运行测试。",
     ]:
         add_bullet(doc, text)
@@ -828,9 +829,40 @@ def build_document():
         color=GOLD,
     )
 
-    add_heading(doc, "26. 当前结论", 1)
-    add_para(doc, "项目已经完成从数据获取到金额误差账本的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权、十九分组固定滚动验证以及锁定共同留出集比较均已有可复现实现。")
-    add_para(doc, "锁定第 19 块的共同测试表明 BaggedHuber 的增长和价格变化 MAE 均优于当前加权平均。当前问题不是简单调整投票权重，而是四个线性模型缺少预测多样性，并且所有模型仍低估部分较大波动。下一步应保留 BaggedHuber 基线，研究真正不同的模型或状态条件，再用全新的未来数据检验。", bold=True, color=INK)
+    add_heading(doc, "26. BaggedHuber 锁定区间持仓与 P&L", 1)
+    add_para(doc, "交易规则只使用第 10—18 块的滚动样本外 BaggedHuber 预测选择。信号在 signal_date 收盘后形成，下一交易日开盘买入，并在同一交易日收盘卖出。当前账本是假设直接交易 Au99.99 的多头/空仓研究模拟，不是黄金 ETF 成交回测。")
+    add_table(
+        doc,
+        ["锁定第 19 块策略", "交易次数", "总收益", "Sharpe", "最大回撤"],
+        [
+            ("开发期选定波动率仓位", "87", "27.54%", "3.75", "-4.02%"),
+            ("成本阈值全仓", "75", "27.50%", "3.19", "-4.70%"),
+            ("零阈值全仓", "87", "25.78%", "2.78", "-6.76%"),
+            ("始终空仓", "0", "0.00%", "0.00", "0.00%"),
+            ("买入并持有", "1", "-8.55%", "-0.47", "-22.29%"),
+            ("每日开盘买入收盘卖出", "143", "-17.90%", "-1.61", "-24.80%"),
+        ],
+        [2780, 1350, 1740, 1500, 1990],
+    )
+    for text in [
+        "初始资金为 100,000 元；默认单边佣金 3 bps、单边滑点 2 bps。",
+        "主规则在锁定区间产生 27,542 元净利润，累计交易成本约 5,752 元。",
+        "双倍成本情景下总收益仍为 21.40%，但实际费率必须按交易品种和券商重新填写。",
+        "开发期九个区块中六个盈利；2020—2022 年部分区块亏损，说明效果存在明显状态依赖。",
+        "第 19 块没有参与阈值或仓位参数选择，但此前模型诊断已查看该时期，因此不能宣传为完全盲测。",
+    ]:
+        add_bullet(doc, text)
+    add_callout(
+        doc,
+        "收益解释限制",
+        "27.54% 是研究账本结果，不是可直接复制的实盘收益。它使用 Au99.99 价格、允许按克进行小数仓位并采用固定成本。若实际交易 518880 ETF、黄金期货或其他产品，跟踪误差、合约乘数、保证金、涨跌停、最小交易单位和真实费用都会改变结果。",
+        fill="FDECEC",
+        color=RED,
+    )
+
+    add_heading(doc, "27. 当前结论", 1)
+    add_para(doc, "项目已经完成从数据获取、模型比较、金额误差、锁定共同留出集到持仓与净 P&L 的完整研究闭环。统计特征选择、稳健回归、PCA、绝对误差损失、移动区块 Bagging、样本外加权和成本敏感性均已有可复现实现。")
+    add_para(doc, "当前候选为 BaggedHuber 配合开发期选定的多头/空仓波动率仓位规则。锁定区间结果强于基准，但跨时期稳定性不足且并非真实可交易产品回测。下一步应固定现有代码和参数，等待全新的未来数据进行纸面交易，同时把直接黄金账本映射到明确交易品种及其真实成本规则。", bold=True, color=INK)
 
     # Keep table rows together where feasible and add document metadata.
     doc.core_properties.title = "黄金量化预测项目完整流程"

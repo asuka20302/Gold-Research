@@ -98,6 +98,7 @@ under [`reports/`](reports/).
 | `huber_10fold_blocked_cv.py` | Requested 9-of-10 blocked Huber diagnostic |
 | `huber_rolling_19block_cv.py` | Fair 19-block, fixed-window leakage-free Huber validation |
 | `locked_block19_ensemble.py` | Five-model development and frozen-weight comparison on common Block 19 |
+| `locked_block19_pnl.py` | Development-selected Bagged Huber position sizing and locked Block 19 P&L |
 | `huber_loss_coefficient_report.py` | Analytic-gradient Huber loss minimization |
 | `gold_PnL_ledger.py` | Standalone position and P&L ledger |
 | `tools/export_public_reports.py` | Copy selected outputs with portable repository-relative paths |
@@ -118,6 +119,12 @@ models on Blocks 10–18, and evaluates them on the same Block 19 observations.
 Block 19 is computationally excluded from fitting and weighting. Because its
 Huber outcomes were inspected in an earlier experiment, it is described as a
 locked common holdout rather than a historically pristine test set.
+
+The maintained P&L experiment is a theoretical direct-Au99.99 long/flat test,
+not an ETF execution simulation. It selects the threshold and volatility sizing
+only from rolling development predictions on Blocks 10–18, then freezes the
+rule before calculating Block 19 P&L. Commission and slippage are explicit CLI
+assumptions and must be replaced with the actual instrument schedule before use.
 
 ## Tests
 
